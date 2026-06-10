@@ -1,0 +1,32 @@
+# --- System Overrides ---
+.DS_Store
+Thumbs.db
+
+# --- Python Environments & Cache ---
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+ENV/
+env/
+build/
+dist/
+*.egg-info/
+
+# --- Node / React Cache (Future Proofing) ---
+node_modules/
+.next/
+out/
+.npm
+yarn-error.log
+
+# --- Local Infrastructure / Secrets ---
+.env
+.env.local
+.env.*.local
+pokeforge-db/pgdata/
+kubeconfig
+*.log
+
