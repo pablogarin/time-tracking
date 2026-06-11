@@ -93,7 +93,7 @@ const ProjectTracking = ({ project, closeCallback }: ProjectTrackingProps) => {
                 <div className="text-lg">Total time registered: {timeEntries.length == 0 ? 'No time' : `${projectTotalTime}`}</div>
             </div>
             <div className="text-2xl p-12 text-red-600">{isWorking ? `Current Task: ${timeElapsed}` : 'No active work'}</div>
-            <div className="flex justify-center items-center w-full">
+            <div className="flex justify-center items-center w-full gap-4">
                 <button className="flex px-4 py-2 rounded border-1 w-1/4 justify-center items-center bg-blue-500 hover:bg-blue-700 text-white cursor-pointer" onClick={() => toggleWorkingProject()}>{!isWorking ? 'Start' : 'Stop'} Timer</button>
                 <button className="flex px-4 py-2 rounded border-1 w-1/4 justify-center items-center bg-blue-500 hover:bg-blue-700 text-white cursor-pointer" onClick={() => closeCallback()}>Go back</button>
             </div>

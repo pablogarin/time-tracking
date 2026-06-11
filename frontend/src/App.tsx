@@ -52,9 +52,11 @@ function App() {
                     <ProjectTracking project={project} closeCallback={clearProject} />
                 ) : (
                     <>
-                        <button className="flex px-4 py-2 rounded border-1 w-1/4 justify-center items-center bg-blue-500 hover:bg-blue-700 text-white cursor-pointer" onClick={() => addProject()}>Add Project</button>
-                        <input className="w-full border rounded py-4 px-2" type="text" onChange={onChangeHandler} placeholder="Search by project" />
-                        <table className="table-auto w-full pb-4">
+                        <div className="flex w-full gap-2 py-4">
+                            <input className="w-full border rounded py-4 px-2" type="text" onChange={onChangeHandler} placeholder="Search by project" />
+                            <button className="flex w-1/3 px-4 py-2 rounded border-1 w-1/4 justify-center items-center bg-blue-500 hover:bg-blue-700 text-white cursor-pointer" onClick={() => addProject()}>Add Project</button>
+                        </div>
+                        <table className="table-auto w-full pb-4 border-t-1 border-gray-500">
                             <thead>
                                 <tr>
                                     <th className="px-4 py-2">Project</th >
@@ -64,8 +66,8 @@ function App() {
                             <tbody>
                                 {!!projects && projects.filter(prj => prj.name.toLowerCase().includes(filter.toLowerCase())).map((prj) => (
                                     <tr className="bg-gray-100 hover:bg-gray-200 cursor-pointer" key={prj.id} onClick={() => loadProject(prj)}>
-                                        <td className="border px-4 py-2">{prj.name}</td>
-                                        <td className="border px-4 py-2">{prj.status}</td>
+                                        <td className="border border-gray-500 px-4 py-2">{prj.name}</td>
+                                        <td className="border border-gray-500 px-4 py-2">{prj.status}</td>
                                     </tr>))}
                             </tbody>
                         </table >
