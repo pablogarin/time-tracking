@@ -4,6 +4,7 @@ import psycopg2
 from datetime import datetime
 from psycopg2.extras import RealDictCursor
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager, contextmanager
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -27,6 +28,7 @@ class TimeEntry(BaseModel):
     id: Optional[int]
     start_time: int
     end_time: int
+    is_current: bool
 
 
 class Project(BaseModel):
@@ -58,6 +60,14 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=["http://localhost:3001"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.post("/projects")
@@ -96,7 +106,7 @@ async def get_project(id: int):
             if row is None:
                 return None
             cur.execute(
-                "SELECT id, start_time, end_time FROM time_entry WHERE project_id = %s",
+                "SELECT id, start_time, end_time, is_current FROM time_entry WHERE project_id = %s",
                 (id,),
             )
             time_entries = cur.fetchall()
@@ -110,7 +120,7 @@ async def get_entries_for_project(id: int):
     async with app.state.lock:
         with get_db_cursor() as cur:
             cur.execute(
-                "SELECT id, start_time, end_time FROM time_entry WHERE project_id = %s",
+                "SELECT id, start_time, end_time, is_current FROM time_entry WHERE project_id = %s",
                 (id,),
             )
             rows = cur.fetchall()
@@ -136,7 +146,7 @@ async def update_entry_for_project(id: int, entry_id: int):
     async with app.state.lock:
         with get_db_cursor() as cur:
             cur.execute(
-                "UPDATE time_entry SET end_time = %s WHERE id = %s AND project_id = %s RETURNING *",
+                "UPDATE time_entry SET end_time = %s, is_current = FALSE WHERE id = %s AND project_id = %s RETURNING *",
                 (datetime.now(), entry_id, id),
             )
             row = cur.fetchone()
