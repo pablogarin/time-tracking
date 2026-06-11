@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import AddProjectForm from './components/AddProjectForm';
 import ProjectTracking from './components/ProjectTracking';
 import { fetchFromAPI } from './utils/fetchFromAPI';
@@ -31,12 +31,12 @@ function App() {
         setShowAddProjectForm(true);
     }
 
-    const saveCallback = (project: Project | null) => {
+    const saveCallback = (project?: Project) => {
         setShowAddProjectForm(false);
         if (!!project) setProject(project);
     }
 
-    const onChangeHandler = (e) => {
+    const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value;
         setFilter(query);
     }

@@ -57,13 +57,17 @@ const ProjectTracking = ({ project, closeCallback }: ProjectTrackingProps) => {
         }
     }
 
+    const getDiffFromDates = (start: Date, end: Date) => {
+        return end.valueOf() - start.valueOf();
+    }
+
     const getTimeElapsed = (time_start: number, end_time?: number, showMiliseconds: boolean = false) => {
         const s = new Date(time_start);
         let e = new Date();
         if (end_time) {
             e = new Date(end_time);
         }
-        let remainder = e - s;
+        let remainder = getDiffFromDates(s, e);
         return getElapsedTimeFromDiff(remainder, showMiliseconds);
     }
 
@@ -88,7 +92,7 @@ const ProjectTracking = ({ project, closeCallback }: ProjectTrackingProps) => {
     }
 
     const projectTotalTime = getElapsedTimeFromDiff(timeEntries.reduce((acc, te) => {
-        const diff = (new Date(te.end_time)) - (new Date(te.start_time));
+        const diff = getDiffFromDates(new Date(te.end_time), new Date(te.start_time));
         return acc + diff;
     }, 0));
 
