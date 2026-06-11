@@ -1,35 +1,8 @@
 import { useState, useEffect } from 'react'
+import AddProjectForm from './components/AddProjectForm';
+import { fetchFromAPI } from './utils/fetchFromAPI';
+import { type Project, type TimeEntry } from './types/Project';
 
-type Project = {
-    id: number;
-    name: string;
-    status: 'Created' | 'Active' | 'Working' | 'Finished';
-}
-
-type TimeEntry = {
-    id: number;
-    start_time: number;
-    end_time: number;
-    is_current: boolean;
-}
-
-const STATUS = ['Created', 'Active', 'Working', 'Finished'];
-
-const fetchFromAPI = async (path: string, method?: string, body?: any) => {
-    const baseUrl = "http://localhost:8005/";
-    const options: { headers: any, method?: string, body?: any } = {
-        headers: { "Content-Type": "application/json" }
-    };
-    if (!!method) {
-        options.method = method;
-    }
-    if (!!body) {
-        options.body = JSON.stringify(body);
-    }
-    const response = await fetch(`${baseUrl}${path}`, options);
-    const data = await response.json();
-    return data;
-}
 
 function App() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -113,34 +86,14 @@ function App() {
         }
     }
 
-    const saveProject = async () => {
-        const name = document.querySelector("input[name='name']").value;
-        const status = document.querySelector("input[name='status']").value;
-        if (!STATUS.includes(status)) {
-            alert('Invalid status');
-            return;
-        }
-        const response = await fetchFromAPI('projects', 'POST', { name, status });
-        if (!!response) {
-            setShowAddProjectForm(false);
-            setProject(response);
-        }
+    const saveCallback = (project: Project) => {
+        setShowAddProjectForm(false);
+        setProject(project);
     }
 
     if (showAddProjectForm) {
         return (
-            <div className="flex flex-col justify-center items-center w-1/2 mx-auto bg-[#3333] p-6">
-                <h3 className="text-2xl font-bold py-4">Add project</h3>
-                <div className="w-full flex justify-center items-center gap-2 py-2">
-                    <label className="flex w-1/4" htmlFor="name">Name</label>
-                    <input className="flex w-3/4 border-1 p-3" type="text" name="name" />
-                </div>
-                <div className="w-full flex justify-center items-center gap-2 py-2">
-                    <label className="flex w-1/4" htmlFor="status">State</label>
-                    <input className="flex w-3/4 border-1 p-3" type="text" name="status" />
-                </div>
-                <button className="flex px-4 py-2 rounded border-1 w-1/4 justify-center items-center bg-blue-500 hover:bg-blue-700 text-white cursor-pointer" onClick={() => saveProject()}>Save</button>
-            </div>
+            <AddProjectForm saveCallback={saveCallback} />
         );
     }
 
