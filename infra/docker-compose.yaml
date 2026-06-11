@@ -34,6 +34,19 @@ services:
     networks:
       - time_tracker_network
 
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: timetracker_frontend
+    restart: always
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
+    networks:
+      - time_tracker_network
+
 volumes:
   pgdata:
 

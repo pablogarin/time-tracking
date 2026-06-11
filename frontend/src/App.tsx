@@ -56,8 +56,8 @@ function App() {
                             <input className="w-full border rounded py-4 px-2" type="text" onChange={onChangeHandler} placeholder="Search by project" />
                             <button className="flex w-1/3 px-4 py-2 rounded border-1 w-1/4 justify-center items-center bg-blue-500 hover:bg-blue-700 text-white cursor-pointer" onClick={() => addProject()}>Add Project</button>
                         </div>
-                        <table className="table-auto w-full pb-4 border-t-1 border-gray-500">
-                            <thead>
+                        <table className="table-auto w-full pb-4">
+                            <thead className="border-t-1 border-b-1 border-gray-500">
                                 <tr>
                                     <th className="px-4 py-2">Project</th >
                                     <th className="px-4 py-2">Status</th >
