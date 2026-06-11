@@ -10,7 +10,7 @@ type ProjectTrackingProps = {
 const ProjectTracking = ({ project, closeCallback }: ProjectTrackingProps) => {
     const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
     const [currentTask, setCurrentTask] = useState<TimeEntry | null>(null);
-    const [timeElapsed, setTimeElapsed] = useState<string>('');
+    const [timeElapsed, setTimeElapsed] = useState<string>('-d -h -m -s');
     const [isWorking, setIsWorking] = useState<boolean>(false);
 
     useEffect(() => {
@@ -35,7 +35,7 @@ const ProjectTracking = ({ project, closeCallback }: ProjectTrackingProps) => {
         const timer = setInterval(() => {
             const currentTaskTime = getTimeElapsed(currentTask?.start_time);
             setTimeElapsed(currentTaskTime);
-        }, 1000);
+        }, 100);
         return () => {
             clearInterval(timer);
         }
@@ -46,26 +46,28 @@ const ProjectTracking = ({ project, closeCallback }: ProjectTrackingProps) => {
             const entryId = currentTask?.id;
             const response = await fetchFromAPI(`projects/${project.id}/entries/${entryId}`, 'PUT');
             setTimeEntries((old) => ([...old, response]));
+            setTimeElapsed(getElapsedTimeFromDiff(0));
             setCurrentTask(null);
             setIsWorking(false);
         } else {
             const response = await fetchFromAPI(`projects/${project.id}/entries`, 'POST');
+            setTimeElapsed(getElapsedTimeFromDiff(0));
             setCurrentTask(response);
             setIsWorking(true);
         }
     }
 
-    const getTimeElapsed = (time_start: number, end_time?: number) => {
+    const getTimeElapsed = (time_start: number, end_time?: number, showMiliseconds: boolean = false) => {
         const s = new Date(time_start);
         let e = new Date();
         if (end_time) {
             e = new Date(end_time);
         }
         let remainder = e - s;
-        return getElapsedTimeFromDiff(remainder);
+        return getElapsedTimeFromDiff(remainder, showMiliseconds);
     }
 
-    const getElapsedTimeFromDiff = (diff: number) => {
+    const getElapsedTimeFromDiff = (diff: number, showMiliseconds?: boolean) => {
         let remainder = diff;
         const days = Math.floor(remainder / (1000 * 60 * 60 * 24));
         remainder %= 1000 * 60 * 60 * 24;
@@ -77,7 +79,12 @@ const ProjectTracking = ({ project, closeCallback }: ProjectTrackingProps) => {
         remainder %= 1000 * 60;
 
         const seconds = Math.floor(remainder / 1000);
-        return `${days}d ${hours}h ${minutes}m ${seconds}s.`;
+        remainder %= 1000 * 100;
+        return `
+            ${days}d
+            ${hours.toString().padStart(2, '0')}h
+            ${minutes.toString().padStart(2, '0')}m
+            ${seconds.toString().padStart(2, '0')}${showMiliseconds ? '.' + (remainder % 100).toString().padStart(2, '0') : ''}s`;
     }
 
     const projectTotalTime = getElapsedTimeFromDiff(timeEntries.reduce((acc, te) => {
@@ -102,8 +109,8 @@ const ProjectTracking = ({ project, closeCallback }: ProjectTrackingProps) => {
                 <table className="table-auto w-full">
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Time</th>
+                            <th className="py-2">Date</th>
+                            <th className="py-2">Time</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -113,7 +120,7 @@ const ProjectTracking = ({ project, closeCallback }: ProjectTrackingProps) => {
                             return (
                                 <tr className="px-4 py-2" key={`timeentry-${te.id}`}>
                                     <td className="border px-4 py-2">{date}</td>
-                                    <td className="border px-4 py-2">{getTimeElapsed(te.start_time, te.end_time)}</td>
+                                    <td className="border px-4 py-2">{getTimeElapsed(te.start_time, te.end_time, true)}</td>
                                 </tr>
                             );
                         })}
