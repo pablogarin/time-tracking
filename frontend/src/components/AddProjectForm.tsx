@@ -20,19 +20,21 @@ const AddProjectForm = ({ saveCallback }: AddProjectFormProps) => {
     }
 
     return (
-        <div className="flex flex-col justify-center items-center w-1/2 mx-auto bg-gray-100 p-6 rounded">
-            <h3 className="text-2xl font-bold py-4">Add project</h3>
-            <div className="w-full flex justify-center items-center gap-2 py-2">
-                <label className="flex w-1/4" htmlFor="name">Name</label>
-                <input className="flex w-3/4 border-1 p-3" type="text" name="name" />
-            </div>
-            <div className="w-full flex justify-center items-center gap-2 py-2">
-                <label className="flex w-1/4" htmlFor="status">State</label>
-                <input className="flex w-3/4 border-1 p-3" type="text" name="status" />
-            </div>
-            <div className="flex w-full justify-end">
-                <button className="flex px-4 py-2 rounded border-1 w-1/4 justify-center items-center bg-blue-500 hover:bg-blue-700 text-white cursor-pointer" onClick={() => saveCallback()}>Close</button>
-                <button className="flex px-4 py-2 rounded border-1 w-1/4 justify-center items-center bg-blue-500 hover:bg-blue-700 text-white cursor-pointer" onClick={() => saveProject()}>Save</button>
+        <div className="flex flex-col justify-center items-center w-1/2 mx-auto bg-gray-100 rounded border">
+            <h3 className="flex w-full text-2xl justify-center items-center font-bold py-4 bg-gray-300 border-b-1">Add project</h3>
+            <div className="flex flex-col justify-center w-full items-center p-6">
+                <div className="w-full flex justify-center items-center gap-2 py-2">
+                    <label className="flex w-1/4 justify-end text-lg" htmlFor="name">Name</label>
+                    <input className="flex w-3/4 border-1 p-3 bg-white rounded" type="text" name="name" />
+                </div>
+                <div className="w-full flex justify-center items-center gap-2 py-2">
+                    <label className="flex w-1/4 justify-end text-lg" htmlFor="status">State</label>
+                    <input className="flex w-3/4 border-1 p-3 bg-white rounded" type="text" name="status" />
+                </div>
+                <div className="flex w-full justify-end">
+                    <button className="flex px-4 py-2 rounded border-1 w-1/4 justify-center items-center bg-blue-500 hover:bg-blue-700 text-white cursor-pointer" onClick={() => saveCallback()}>Close</button>
+                    <button className="flex px-4 py-2 rounded border-1 w-1/4 justify-center items-center bg-blue-500 hover:bg-blue-700 text-white cursor-pointer" onClick={() => saveProject()}>Save</button>
+                </div>
             </div>
         </div>
     );

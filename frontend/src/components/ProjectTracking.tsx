@@ -92,18 +92,18 @@ const ProjectTracking = ({ project, closeCallback }: ProjectTrackingProps) => {
     }
 
     const projectTotalTime = getElapsedTimeFromDiff(timeEntries.reduce((acc, te) => {
-        const diff = getDiffFromDates(new Date(te.end_time), new Date(te.start_time));
+        const diff = getDiffFromDates(new Date(te.start_time), new Date(te.end_time));
         return acc + diff;
     }, 0));
 
 
     return (
         <div className="flex flex-col w-full justify-center items-center gap-4">
-            <div className="flex flex-col justify-center items-center">
-                <div className="text-2xl">{project.name}</div>
+            <div className="flex flex-col justify-center items-center w-full border-b-1 pb-6">
+                <div className="text-3xl font-bold py-2">{project.name}</div>
                 <div className="text-lg">Total time registered: {timeEntries.length == 0 ? 'No time' : `${projectTotalTime}`}</div>
             </div>
-            <div className="text-2xl p-12 text-red-600">{isWorking ? `Current Task: ${timeElapsed}` : 'No active work'}</div>
+            <div className="flex justify-center items-center text-2xl p-12 text-red-600 border-2 rounded-xl w-1/2 bg-red-100 font-bold">{isWorking ? `Current Task: ${timeElapsed}` : 'No active work'}</div>
             <div className="flex justify-center items-center w-full gap-4">
                 <button className="flex px-4 py-2 rounded border-1 w-1/4 justify-center items-center bg-blue-500 hover:bg-blue-700 text-white cursor-pointer" onClick={() => toggleWorkingProject()}>{!isWorking ? 'Start' : 'Stop'} Timer</button>
                 <button className="flex px-4 py-2 rounded border-1 w-1/4 justify-center items-center bg-blue-500 hover:bg-blue-700 text-white cursor-pointer" onClick={() => closeCallback()}>Go back</button>
